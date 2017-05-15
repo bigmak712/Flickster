@@ -1,5 +1,6 @@
 package com.example.bigmak712.flickster;
 
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,6 +49,7 @@ public class MovieActivity extends AppCompatActivity {
                 try {
                     movieJsonResults = response.getJSONArray("results");
                     movies.addAll(Movie.fromJSonArray(movieJsonResults));
+                    checkOrientation();
                     movieAdapter.notifyDataSetChanged();
 
                     Log.d("DEBUG", movies.toString());
@@ -61,5 +63,15 @@ public class MovieActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
         });
+    }
+
+    public void checkOrientation() {
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+            movieAdapter.setPortraitOrientation(true);
+        }
+        else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            movieAdapter.setPortraitOrientation(false);
+        }
     }
 }

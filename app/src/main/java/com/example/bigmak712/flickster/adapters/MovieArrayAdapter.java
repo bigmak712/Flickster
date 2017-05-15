@@ -22,6 +22,12 @@ import java.util.List;
 
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
+    private boolean portraitOrientation = true;
+
+    public boolean getPortraitOrientation() { return portraitOrientation; }
+
+    public void setPortraitOrientation(boolean pOri) { this.portraitOrientation = pOri; }
+
     public MovieArrayAdapter(Context context, List<Movie> movies) {
         super(context, android.R.layout.simple_list_item_1, movies);
     }
@@ -50,7 +56,12 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         tvTitle.setText(movie.getOriginalTitle());
         tvOverview.setText(movie.getOverview());
 
-        Picasso.with(getContext()).load(movie.getPosterPath()).into(ivImage);
+        if(getPortraitOrientation()) {
+            Picasso.with(getContext()).load(movie.getPosterPath()).into(ivImage);
+        }
+        else {
+            Picasso.with(getContext()).load(movie.getBackdropPath()).into(ivImage);
+        }
 
         // return the view
         return convertView;
