@@ -16,6 +16,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 /**
  * Created by bigmak712 on 5/13/17.
  */
@@ -24,7 +26,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
     private boolean portraitOrientation = true;
 
-    public boolean getPortraitOrientation() { return portraitOrientation; }
+    private boolean getPortraitOrientation() { return portraitOrientation; }
 
     public void setPortraitOrientation(boolean pOri) { this.portraitOrientation = pOri; }
 
@@ -56,11 +58,17 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         tvTitle.setText(movie.getOriginalTitle());
         tvOverview.setText(movie.getOverview());
 
+        // set the image based on the orientation
+        // round out the image corners
         if(getPortraitOrientation()) {
-            Picasso.with(getContext()).load(movie.getPosterPath()).into(ivImage);
+            //Picasso.with(getContext()).load(movie.getPosterPath()).into(ivImage);
+            Picasso.with(getContext()).load(movie.getPosterPath()).
+                    transform(new RoundedCornersTransformation(10, 10)).into(ivImage);
         }
         else {
-            Picasso.with(getContext()).load(movie.getBackdropPath()).into(ivImage);
+            //Picasso.with(getContext()).load(movie.getBackdropPath()).into(ivImage);
+            Picasso.with(getContext()).load(movie.getBackdropPath()).
+                    transform(new RoundedCornersTransformation(10, 10)).into(ivImage);
         }
 
         // return the view
