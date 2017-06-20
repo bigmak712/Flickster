@@ -3,11 +3,12 @@ package com.example.bigmak712.flickster;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.bigmak712.flickster.adapters.MovieArrayAdapter;
+import com.example.bigmak712.flickster.adapters.MovieAdapter;
 import com.example.bigmak712.flickster.models.Movie;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -39,10 +40,12 @@ public class MovieActivity extends AppCompatActivity {
     String imageBaseUrl;
     // the poster size to use when fetching images, part of the url
     String posterSize;
-
+    // the list of currently playing movies
     ArrayList<Movie> movies;
-    MovieArrayAdapter movieAdapter;
-    ListView lvItems;
+    // the recycler view
+    RecyclerView rvMovies;
+    // the adapter wired to the recycler view
+    MovieAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +54,50 @@ public class MovieActivity extends AppCompatActivity {
 
         // initialize the client
         client = new AsyncHttpClient();
+        // initialize the list of movies
+        movies = new ArrayList<>();
+        // initialize the adapter -- movies array cannot be reinitialized after this point
+        adapter = new MovieAdapter(movies);
+
+        // resolve the recycler view and connect a layout manager
+        rvMovies = (RecyclerView)findViewById(R.id.rvMovies);
+        rvMovies.setLayoutManager(new LinearLayoutManager(this));
+        rvMovies.setAdapter(adapter);
 
         // get the configuration on app creation
         getConfiguration();
+    }
 
-        //initialize the list of movies
-        movies = new ArrayList<>();
+    public void getNowPlaying() {
+        // create the url
+        String url = API_BASE_URL + "/movie/now_playing";
+        // set the request parameters
+        RequestParams params = new RequestParams();
+        params.put(API_KEY_PARAM, getString(R.string.api_key));
 
-        lvItems = (ListView) findViewById(R.id.lvMovies);
-        movieAdapter = new MovieArrayAdapter(this, movies);
-        lvItems.setAdapter(movieAdapter);
+        client.get(url, params, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // load the results into the movies list
+                try {
+                    // array of JSON objects which will contain the movie results
+                    JSONArray results = response.getJSONArray("results");
+                    movies.addAll(Movie.fromJSonArray(results));
+                    checkOrientation();
+                    adapter.notifyDataSetChanged();
 
-        getMovies();
+                    Log.i(TAG, String.format("Loaded %s movies", movies.size()));
+                    Log.d("DEBUG", movies.toString());
+                } catch (JSONException e) {
+                    logError("Failed to parse now_playing movies", e, true);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                logError("Failed to get data from now_playing", throwable, true);
+            }
+        });
     }
 
     // get the configuration from the API
@@ -81,51 +116,25 @@ public class MovieActivity extends AppCompatActivity {
                     // get the image base url
                     imageBaseUrl = images.getString("secure_base_url");
                     // get the poster size
-                    JSONArray posterSizeOptions = response.getJSONArray("poster_sizes");
+                    JSONArray posterSizeOptions = images.getJSONArray("poster_sizes");
                     // use the option at index 3 or w342 as a fallback
                     posterSize = posterSizeOptions.optString(3, "w342");
+                    Log.i(TAG, String.format("Loaded configuration with imageBaseUrl %s and posterSize %s", imageBaseUrl, posterSize));
+                    // get the now playing movie list
+                    getNowPlaying();
                 } catch (JSONException e) {
                     logError("Failed parsing configuration", e, true);
                 }
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-            }
-        });
-    }
-
-    public void getMovies() {
-        String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
-
-        AsyncHttpClient client = new AsyncHttpClient();
-
-        client.get(url, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
-                // array of JSON objects which will contain the movie results
-                JSONArray movieJsonResults = null;
-
-                try {
-                    movieJsonResults = response.getJSONArray("results");
-                    movies.addAll(Movie.fromJSonArray(movieJsonResults));
-                    checkOrientation();
-                    movieAdapter.notifyDataSetChanged();
-
-                    Log.d("DEBUG", movies.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 logError("Failed getting configuration", throwable, true);
             }
         });
     }
+
+
 
     private void logError(String message, Throwable error, boolean alertUser){
         // always log the error
@@ -139,10 +148,10 @@ public class MovieActivity extends AppCompatActivity {
     public void checkOrientation() {
         int orientation = getResources().getConfiguration().orientation;
         if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-            movieAdapter.setPortraitOrientation(true);
+            adapter.setPortraitOrientation(true);
         }
         else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            movieAdapter.setPortraitOrientation(false);
+            adapter.setPortraitOrientation(false);
         }
     }
 }

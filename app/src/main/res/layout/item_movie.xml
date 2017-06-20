@@ -2,33 +2,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_margin="5dp"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/ivMovieImage"
-        android:layout_alignParentTop="true"
+        android:layout_width="90dp"
+        android:layout_height="135dp"
+        android:layout_marginRight="5dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        tools:src="@mipmap/ic_launcher"/>
+        android:layout_alignParentTop="true"
+        tools:src="@mipmap/ic_launcher" />
+
     <TextView
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:text="Guardians of the Galaxy Vol. 2"
-        android:id="@+id/tvTitle"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/ivMovieImage"
-        android:layout_toRightOf="@+id/ivMovieImage" />
+        android:layout_toRightOf="@+id/ivMovieImage"
+        android:text="Movie Title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/tvOverview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTitle"
-        android:layout_toEndOf="@+id/ivMovieImage"
-        tools:text="The Guardians must fight to keep their newfound family together as they unravel the mysteries of Peter Quill's true parentage."
-        android:layout_toRightOf="@+id/ivMovieImage" />
+        android:layout_toRightOf="@+id/ivMovieImage"
+        android:text="Movie overview and synopsis"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

@@ -1,38 +1,73 @@
 package com.example.bigmak712.flickster.adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.Transformation;
 import com.example.bigmak712.flickster.R;
 import com.example.bigmak712.flickster.models.Movie;
 
-import java.util.List;
-
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
-
-import static com.example.bigmak712.flickster.R.id.tvOverview;
-import static com.example.bigmak712.flickster.R.id.tvTitle;
+import java.util.ArrayList;
 
 /**
  * Created by bigmak712 on 5/13/17.
  */
 
-public class MovieArrayAdapter extends ArrayAdapter<Movie> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
-    // View lookup cache
-    private class ViewHolder implements View.OnClickListener{
-        ImageView movieImage;
-        TextView title;
-        TextView overview;
+    // list of movies
+    ArrayList<Movie> movies;
+
+    // initialize with list
+    public MovieAdapter(ArrayList<Movie> movies) {
+        this.movies = movies;
+    }
+
+    // creates and inflates a new view
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // get the context and create the inflater
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        // create the view using the item_movie layout
+        View movieView = inflater.inflate(R.layout.item_movie, parent, false);
+        // return a new ViewHolder
+        return new ViewHolder(movieView);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        // get the movie data at the specified position
+        Movie movie = movies.get(position);
+        // populate the view with the movie data
+        holder.tvTitle.setText(movie.getTitle());
+        holder.tvOverview.setText(movie.getOverview());
+
+    }
+
+    // returns the total number of items in the list
+    @Override
+    public int getItemCount() {
+        return movies.size();
+    }
+
+    // create the viewholder as a static inner class
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        ImageView ivPosterImage;
+        TextView tvTitle;
+        TextView tvOverview;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            // lookup view objects by id
+            ivPosterImage = (ImageView)itemView.findViewById(R.id.ivMovieImage);
+            tvOverview = (TextView)itemView.findViewById(R.id.tvOverview);
+            tvTitle = (TextView)itemView.findViewById(R.id.tvTitle);
+        }
 
         @Override
         public void onClick(View v) {
@@ -46,8 +81,8 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     private boolean getPortraitOrientation() { return portraitOrientation; }
 
     public void setPortraitOrientation(boolean pOri) { this.portraitOrientation = pOri; }
-
-    public MovieArrayAdapter(Context context, List<Movie> movies) {
+/*
+    public MovieAdapter(Context context, List<Movie> movies) {
         super(context, android.R.layout.simple_list_item_1, movies);
     }
 
@@ -88,7 +123,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.title.setText(movie.getOriginalTitle());
+        viewHolder.title.setText(movie.getTitle());
         viewHolder.overview.setText(movie.getOverview());
 
 
@@ -102,10 +137,10 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         TextView tvOverview = (TextView)convertView.findViewById(R.id.tvOverview);
 
         // populate data
-        tvTitle.setText(movie.getOriginalTitle());
+        tvTitle.setText(movie.getTitle());
         tvOverview.setText(movie.getOverview());
         */
-
+/*
         // Transformation to add rounded corners to the movie image
         Transformation roundedCorners = new RoundedCornersTransformation(getContext(), 10, 10);
 
@@ -128,4 +163,5 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         // return the view
         return convertView;
     }
+ */
 }
