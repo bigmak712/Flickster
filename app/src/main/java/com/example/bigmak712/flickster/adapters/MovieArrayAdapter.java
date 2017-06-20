@@ -29,10 +29,16 @@ import static com.example.bigmak712.flickster.R.id.tvTitle;
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
     // View lookup cache
-    private static class ViewHolder {
+    private class ViewHolder implements View.OnClickListener{
         ImageView movieImage;
         TextView title;
         TextView overview;
+
+        @Override
+        public void onClick(View v) {
+            // get the item's position
+
+        }
     }
 
     private boolean portraitOrientation = true;
