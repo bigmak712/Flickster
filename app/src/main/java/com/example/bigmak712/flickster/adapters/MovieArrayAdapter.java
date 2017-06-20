@@ -10,13 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
 import com.example.bigmak712.flickster.R;
 import com.example.bigmak712.flickster.models.Movie;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static com.example.bigmak712.flickster.R.id.tvOverview;
 import static com.example.bigmak712.flickster.R.id.tvTitle;
@@ -67,6 +68,12 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
             viewHolder.title = (TextView)convertView.findViewById(tvTitle);
             viewHolder.overview = (TextView)convertView.findViewById(tvOverview);
 
+            // Load placeholder image?
+            Glide.with(getContext())
+                    .load(R.drawable.ic_movie_placeholder)
+                    .override(200, 400)
+                    .into(viewHolder.movieImage);
+
             // Cache the viewHolder object inside the fresh view
             convertView.setTag(viewHolder);
         }
@@ -77,6 +84,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
         viewHolder.title.setText(movie.getOriginalTitle());
         viewHolder.overview.setText(movie.getOverview());
+
 
         /*
         // find the image view
@@ -92,16 +100,23 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         tvOverview.setText(movie.getOverview());
         */
 
+        // Transformation to add rounded corners to the movie image
+        Transformation roundedCorners = new RoundedCornersTransformation(getContext(), 10, 10);
+
         // Set the image based on the orientation & round out the image corners
         if(getPortraitOrientation()) {
             //Picasso.with(getContext()).load(movie.getPosterPath()).into(ivImage);
-            Picasso.with(getContext()).load(movie.getPosterPath()).
-                    transform(new RoundedCornersTransformation(10, 10)).into(viewHolder.movieImage);
+            Glide.with(getContext())
+                    .load(movie.getPosterPath())
+                    .bitmapTransform(roundedCorners)
+                    .into(viewHolder.movieImage);
         }
         else {
             //Picasso.with(getContext()).load(movie.getBackdropPath()).into(ivImage);
-            Picasso.with(getContext()).load(movie.getBackdropPath()).
-                    transform(new RoundedCornersTransformation(10, 10)).into(viewHolder.movieImage);
+            Glide.with(getContext())
+                    .load(movie.getBackdropPath())
+                    .bitmapTransform(roundedCorners)
+                    .into(viewHolder.movieImage);
         }
 
         // return the view
