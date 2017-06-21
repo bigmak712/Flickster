@@ -19,13 +19,9 @@ public class Movie {
     String title;
     String overview;
 
-    public String getPosterPath() {
-        return posterPath;
-    }
+    public String getPosterPath() { return posterPath; }
 
-    public String getBackdropPath() {
-        return String.format("https://image.tmdb.org/t/p/w342/%s", backdropPath);
-    }
+    public String getBackdropPath() { return backdropPath; }
 
     public String getTitle() {
         return title;
