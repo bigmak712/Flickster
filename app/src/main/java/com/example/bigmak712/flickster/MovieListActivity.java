@@ -1,6 +1,5 @@
 package com.example.bigmak712.flickster;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -114,7 +113,6 @@ public class MovieListActivity extends AppCompatActivity {
                     // array of JSON objects which will contain the movie results
                     JSONArray results = response.getJSONArray("results");
                     movies.addAll(Movie.fromJSonArray(results));
-                    checkOrientation();
                     adapter.notifyDataSetChanged();
 
                     Log.i(TAG, String.format("Loaded %s movies", movies.size()));
@@ -137,15 +135,6 @@ public class MovieListActivity extends AppCompatActivity {
         if(alertUser){
             // show a long toast with the error message
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        }
-    }
-    public void checkOrientation() {
-        int orientation = getResources().getConfiguration().orientation;
-        if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-            adapter.setPortraitOrientation(true);
-        }
-        else if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            adapter.setPortraitOrientation(false);
         }
     }
 }
