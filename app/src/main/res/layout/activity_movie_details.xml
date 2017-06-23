@@ -40,4 +40,13 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/rbVoteAverage"
         android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/ivBackdropImage"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvOverview"
+        app:srcCompat="@drawable/flicks_backdrop_placeholder" />
 </RelativeLayout>

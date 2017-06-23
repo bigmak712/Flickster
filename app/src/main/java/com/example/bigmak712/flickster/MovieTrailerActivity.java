@@ -7,16 +7,23 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.loopj.android.http.AsyncHttpClient;
 
 public class MovieTrailerActivity extends YouTubeBaseActivity {
+
+    final String movieIdKey = "Movie id";
+
+    AsyncHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_trailer);
 
-        //temporary test video id
-        final String videoId = "tKodtNFpzBA";
+        client = new AsyncHttpClient();
+        final String videoId = getIntent().getStringExtra(movieIdKey);
+        Log.d("DEBUG", "The video id is " + videoId);
+        // video id
 
         // resolve the player view from the layout
         YouTubePlayerView playerView = (YouTubePlayerView)findViewById(R.id.player);

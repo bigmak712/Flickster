@@ -131,6 +131,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                 Intent i = new Intent(context, MovieDetailsActivity.class);
                 // serialize the movie using parceler, use its short name as its key
                 i.putExtra(Movie.class.getSimpleName(), Parcels.wrap(movie));
+                i.putExtra(Config.class.getSimpleName(), Parcels.wrap(config));
                 // show the activity
                 context.startActivity(i);
             }

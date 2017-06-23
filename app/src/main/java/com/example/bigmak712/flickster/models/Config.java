@@ -3,22 +3,23 @@ package com.example.bigmak712.flickster.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 /**
  * Created by bigmak712 on 6/20/17.
  */
 
+@Parcel
 public class Config {
 
     // the base url for loading images
     String imageBaseUrl;
     // the poster size to use when fetching images, part of the url
     String posterSize;
-
-
-
     // the backdrop size to use when fetching images
     String backdropSize;
+
+    public Config(){}
 
     public Config(JSONObject object) throws JSONException {
         JSONObject images = object.getJSONObject("images");
